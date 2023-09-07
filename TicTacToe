@@ -1,0 +1,73 @@
+from random import randrange
+
+def display_board(board):
+    for row in board:
+        print('+-------' * 3 + '+')
+        print('|       ' * 3 + '|')
+        print('|   {}   |   {}   |   {}   |'.format(*row))
+        print('|       ' * 3 + '|')
+    print('+-------' * 3 + '+')
+
+def enter_move(board):
+    while True:
+        move = int(input('Enter your move: '))
+        row = (move - 1) // 3
+        col = (move - 1) % 3
+        if board[row][col] == ' ':
+            board[row][col] = 'O'
+            break
+
+def make_list_of_free_fields(board):
+    free_fields = []
+    for row in range(3):
+        for col in range(3):
+            if board[row][col] == ' ':
+                free_fields.append((row, col))
+    return free_fields
+
+def victory_for(board, sign):
+    # cek baris
+    for row in board:
+        if row[0] == row[1] == row[2] == sign:
+            return True
+
+    # cek kolom
+    for col in range(3):
+        if board[0][col] == board[1][col] == board[2][col] == sign:
+            return True
+
+    # cek diagonal
+    if board[0][0] == board[1][1] == board[2][2] == sign:
+        return True
+    if board[0][2] == board[1][1] == board[2][0] == sign:
+        return True
+
+    return False
+
+def draw_move(board):
+    while True:
+        row = randrange(3)
+        col = randrange(3)
+        if board[row][col] == ' ':
+            board[row][col] = 'X'
+            break
+
+board = [
+    [' ', ' ', ' '],
+    [' ', ' ', ' '],
+    [' ', ' ', ' ']
+]
+
+while not victory_for(board, 'X') and not victory_for(board, 'O') and make_list_of_free_fields(board):
+    display_board(board)
+    enter_move(board)
+    draw_move(board)
+
+display_board(board)
+
+if victory_for(board, 'X'):
+    print('Anda kalah!')
+elif victory_for(board, 'O'):
+    print('Anda menang!')
+else:
+    print('Seri!')
